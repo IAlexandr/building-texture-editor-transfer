@@ -46,6 +46,20 @@ function copy (body) {
   });
 }
 router.post('/move', function (req, res) {
+
+  /*
+  Пример использования:
+   {
+   "from": {
+   "registerNo": "00010003EEB0",
+   "ID": "0002000289C1"
+   },
+   "to": {
+   "registerNo": "00010003EEB4"
+   }
+   }
+  * */
+
   const { from, to } = req.body;
   const { registerNo, ID } = from;
   const { registerNo: toRegisterNo } = to;
