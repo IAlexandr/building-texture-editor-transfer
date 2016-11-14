@@ -27,12 +27,12 @@ const server = new WebpackDevServer(compiler, {
   hot: true,
   historyApiFallback: true,
   proxy: {
-    '/api/*': 'http://localhost:4000'
+    '/api/*': 'http://localhost:4001'
   }
 });
 
 server.listen(options.PORT, () => {
-  httpServer.listen(4000);
+  httpServer.listen(4001);
   /* eslint-disable no-console */
   console.log('App server listening on port ', options.PORT);
   console.log('Build app...');
