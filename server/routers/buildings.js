@@ -60,27 +60,15 @@ router.post('/move', function (req, res) {
       if (err) {
         return res.status(500).json({ errmessage: err.message });
       }
-      const body = {
-        from: {
-          ParentRegisterNo: registerNo,
-          ID,
-          wallId: 0
-        },
-        to: {
-          ParentRegisterNo: toRegisterNo,
-          ID,
-          wallId: 0
-        },
-      };
       const promises = doc.geometry.points.map((point, i) => {
         const body = {
           from: {
-            ParentRegisterNo: registerNo,
+            registerNo,
             ID,
             wallId: i
           },
           to: {
-            ParentRegisterNo: toRegisterNo,
+            registerNo: toRegisterNo,
             ID,
             wallId: i
           },
