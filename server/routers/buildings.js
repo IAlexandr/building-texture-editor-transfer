@@ -3,7 +3,7 @@ import db from './../db';
 import 'isomorphic-fetch';
 import path from 'path';
 import options from './../../options';
-
+import fs from 'fs';
 const router = Router();
 
 router.get('/', function (req, res) {
@@ -41,6 +41,7 @@ function copy (body) {
     const fromImageReadStream = fs.createReadStream(fromImageFilePath);
     const toImageWriteStream = fs.createWriteStream(toImageFilePath);
     fromImageReadStream.pipe(toImageWriteStream);
+    console.log('фото скопировано. toRegisterNo:', toRegisterNo, ' wallId', wallId);
     return resolve();
   });
 }
@@ -60,7 +61,7 @@ router.post('/move', function (req, res) {
       if (err) {
         return res.status(500).json({ errmessage: err.message });
       }
-      const promises = doc.geometry.points.map((point, i) => {
+      doc.geometry.points.forEach((point, i) => {
         const body = {
           from: {
             registerNo,
@@ -73,17 +74,9 @@ router.post('/move', function (req, res) {
             wallId: i
           },
         };
-        return copy(body);
+        copy(body);
       });
-
-      Promise.all(promises, (results) => {
-        console.log(results);
-        return res.json(results);
-      })
-        .catch(e => {
-          console.log(e.message);
-          return res.status(500).json({ errmessage: e.message });
-        });
+      return res.json({result: 'ok'});
     });
 
   });
