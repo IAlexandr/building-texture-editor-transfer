@@ -1,5 +1,10 @@
 const version = require('./package.json').version;
 const optionsSpec = {
+  sourceDirPath: {
+    required: true,
+    default: './../building-texture-editor/data/',
+    env: 'BTE_SOURCE_DIR_PATH'
+  },
   PORT: {
     required: true,
     default: '3002',
