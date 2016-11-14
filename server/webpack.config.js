@@ -7,7 +7,6 @@ module.exports = {
   entry: {
     app: [
       'webpack/hot/dev-server',
-      './../client/index.js',
 ],
 },
 
@@ -18,11 +17,6 @@ module.exports = {
 
   module: {
     loaders: [
-      {
-        test: /\.(js|jsx)$/,
-        exclude: /node_modules/,
-        loader: 'react-hot!babel',
-      },
       {
         test: /\.css$/,
         loader: 'style!css',
@@ -56,7 +50,6 @@ module.exports = {
     root: [
       process.cwd(),
       path.resolve(process.cwd(), '/server'),
-      path.resolve(process.cwd(), '/client'),
     ],
   },
 

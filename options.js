@@ -1,5 +1,4 @@
 const version = require('./package.json').version;
-const connections = require('./connections');
 const optionsSpec = {
   PORT: {
     required: true,
@@ -15,7 +14,6 @@ const optionsSpec = {
 
 let options = {
   version,
-  connections
 };
 
 export default {...options, ...Object.keys(optionsSpec).map((key) => {
