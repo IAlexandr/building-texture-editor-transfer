@@ -18,7 +18,7 @@ function prepCoordsWithConvert (coordSystemConvertOperation, coords) {
   return sm[coordSystemConvertOperation](coords);
 }
 
-function prepFeatures ({fields, features, coordSystemConvertOperation}) {
+function prepFeatures ({ fields, features, coordSystemConvertOperation }) {
   const resultFeatures = [];
   return new Promise((resolve, reject) => {
     features.forEach((feature) => {
@@ -73,14 +73,14 @@ function prepFeatures ({fields, features, coordSystemConvertOperation}) {
 };
 
 export default function (props, callback) {
-  const { featureServerUrl, coordSystemConvertOperation, username, password } = props;
+  const { featureServerUrl, coordSystemConvertOperation, username, password, query } = props;
   const featureServer = new FeatureServer({ featureServerUrl, username, password });
   featureServer.connect()
     .then((fsInfo) => featureServer.queryCount({ returnGeometry: false }))
     .then((count) => {
       console.log('Кол-во получаемых объектов:', count);
-      featureServer.query({ returnIDsOnly: true })
-        .then(({objectIds}) => {
+      featureServer.query({ ...query, ...{ returnIDsOnly: true } })
+        .then(({ objectIds }) => {
           let resultFeatures = [];
           let objectIDsParts = splitArray(objectIds, 100);
           console.log('Получение объектов будет производиться частями по 100 объектов.');
@@ -96,7 +96,7 @@ export default function (props, callback) {
                 return done(err);
               });
           }, (err) => {
-            return callback (err, {
+            return callback(err, {
               type: 'FeatureCollection',
               features: resultFeatures
             });
