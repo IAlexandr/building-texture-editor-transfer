@@ -8,6 +8,7 @@ import arcgisFeaturesToGeojson from './../lib/arcgis-features-to-geojson';
 const router = Router();
 import {prepFloors, prepSimplifyFeaturePoints} from './../lib/utils';
 import turfArea from 'turf-area';
+import uuid from 'uuid';
 
 router.get('/', function (req, res) {
   db.Building.find({}, (err, docs) => {
@@ -129,17 +130,23 @@ router.post('/fs/copy', (req, res) => {
       }
       let ParentRegisterNo = registerNo;
 
-      const docs = featureCollection.features.map(feature => {
+      let docs = featureCollection.features.map(feature => {
         if (!ParentRegisterNo && feature.properties.RegisterNo) {
           ParentRegisterNo = feature.properties.RegisterNo;
         }
-        feature.properties.ParentRegisterNo = ParentRegisterNo;
         feature = prepSimplifyFeaturePoints(feature, 0.000001);
         feature = prepFloors(feature);
         feature.geometry.originPoints = feature.geometry.points;
         feature.geometry.updatedAt = new Date().toISOString();
         feature.properties['Площадь'] = turfArea(feature);
         return feature;
+      });
+      if (!ParentRegisterNo) {
+        ParentRegisterNo = uuid.v4();
+      }
+      docs = docs.map(doc => {
+        doc.properties.ParentRegisterNo = ParentRegisterNo;
+        return doc;
       });
 
       db.Building.collection.insert(docs, (err, result) => {
